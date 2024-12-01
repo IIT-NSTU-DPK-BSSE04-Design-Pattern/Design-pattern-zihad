@@ -1,0 +1,46 @@
+@startuml
+class FraudDetectionSystem {
+    +main(String[] args)
+}
+
+class Transaction {
+    -double amount
+    -String location
+    -String merchant
+    -String customerUsualLocation
+    -boolean isFraudulent
+    +Transaction(double amount, String location, String merchant, String customerUsualLocation)
+    +boolean isFraudulent()
+    +void setFraudulent(boolean fraudulent)
+}
+
+abstract class FraudChecker {
+    -FraudChecker nextChecker
+    +setNext(FraudChecker nextChecker): FraudChecker
+    #check(Transaction transaction): void
+}
+
+class BasicCheck extends FraudChecker {
+    +check(Transaction transaction): void
+}
+
+class GeographicalAnomalyCheck extends FraudChecker {
+    +check(Transaction transaction): void
+}
+
+class BlacklistedMerchantCheck extends FraudChecker {
+    +check(Transaction transaction): void
+}
+
+class HighRiskTransactionCheck extends FraudChecker {
+    +check(Transaction transaction): void
+}
+
+FraudDetectionSystem --> Transaction
+FraudDetectionSystem --> FraudChecker
+FraudChecker <|-- BasicCheck
+FraudChecker <|-- GeographicalAnomalyCheck
+FraudChecker <|-- BlacklistedMerchantCheck
+FraudChecker <|-- HighRiskTransactionCheck
+FraudChecker o--> FraudChecker : nextChecker
+@enduml
